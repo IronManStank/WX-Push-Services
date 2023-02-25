@@ -1,6 +1,8 @@
 # 怎样使用微信以及微信推送服务
 
-[TOC]
+<!-- [TOC] -->
+
+<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
 
 
 
