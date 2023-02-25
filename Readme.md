@@ -57,7 +57,7 @@
 执行`pip install -r requirments.txt`
 
 ### 3. 运行示例`demo`
-
+在`main.py`中运行示例`demo`
 ```python
     # wxps = APP_PUSH()
     hookps = WEB_HOOK_PUSH()
