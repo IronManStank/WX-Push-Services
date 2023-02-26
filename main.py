@@ -107,14 +107,14 @@ class APP_PUSH(object):
             app_secret = config["Config"]["app_secret"]
             return app_id, app_secret, corp_id
         except Exception as e:
-            print("未检测到本地配置文件! 请配置必要文件！")
+            print(f"未检测到本地配置文件! 请配置必要文件！Err: {e}")
 
 
 class WEB_HOOK_PUSH:
     def __init__(self) -> None:
         """_summary_
         init config
-        """        
+        """
         self.header = {"Content-Type": "application/json;charset=UTF-8"}
         self.url = 'https://qyapi.weixin.qq.com/cgi-bin/webhook/send'
         try:
@@ -122,7 +122,6 @@ class WEB_HOOK_PUSH:
         except KeyError:
             print("未检测到环境变量，尝试使用本地配置文件中")
             self.key = self.get_config()
-
 
     @retry(tries=3, delay=1)
     def send_message(self, message, markdown=False) -> None:
@@ -134,8 +133,8 @@ class WEB_HOOK_PUSH:
 
         Raises:
             Exception: Faild and retry
-        """        
-        params = {'key':self.key}
+        """
+        params = {'key': self.key}
         if markdown:
             message_body = {
                 "msgtype": "markdown",
@@ -149,14 +148,14 @@ class WEB_HOOK_PUSH:
                 "at": {"atMobiles": [], "isAtAll": False},
             }
         send_data = json.dumps(message_body).encode("utf-8")
-        send_data = requests.post(self.url,params=params,data=send_data,headers = self.header)
+        send_data = requests.post(
+            self.url, params=params, data=send_data, headers=self.header)
         status = send_data.json()["errmsg"]
-        if status  != "ok":
+        if status != "ok":
             print(send_data)
             raise Exception("消息发送失败")
         else:
             print("消息发送成功")
-        
 
     @staticmethod
     def get_config() -> str:
@@ -174,10 +173,11 @@ class WEB_HOOK_PUSH:
         except Exception as e:
             print("未检测到本地配置文件! 请配置必要文件！")
 
+
 def demo():
     # wxps = APP_PUSH()
     hookps = WEB_HOOK_PUSH()
-    
+
     test = (
         "# %s\n" % "消息推送展示项目：企业微信"
         + "## •  环境：测试环境 \n"
@@ -186,6 +186,7 @@ def demo():
     )
     # wxps.send_message(message=test, markdown=False)
     hookps.send_message(message=test, markdown=False)
+
 
 if __name__ == "__main__":
     demo()
