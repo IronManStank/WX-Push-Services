@@ -10,6 +10,10 @@
 
 
 
+## 主要用途
+
+
+
 ## 实现微信推送服务的两种方式
 
 1. 调用企业微信应用
@@ -56,8 +60,26 @@
 
 执行`pip install -r requirments.txt`
 
+### 3. 生成并填写配置文件
+
+初次运行`main.py`中的`demo`，会在当前目录下生成`config.ini`配置文件，如下面代码所示：
+
+```ini
+[Config]
+corp_id = your corp_id # Enter your enterprise ID of wechat background here.
+app_id = your app_id # Enter your application ID of enterprise wechat background here
+app_secret = your app_secret # Enter your application secret of enterprise wechat background here
+# 使用APP_PUSH方式时以上必填
+# 使用WEB_HOOK_PUSH方式仅需填写下述消息
+key = your key # Enter the webhook key of the enterprise's wechat group chat robot here
+
+
+```
+
+依次按照`# .......`中的提示填写必要信息。
+
 ### 3. 运行示例`demo`
-在`main.py`中运行示例`demo`
+在`main.py`中再次运行示例`demo`
 ```python
     # wxps = APP_PUSH()
     hookps = WEB_HOOK_PUSH()
@@ -70,6 +92,8 @@
     # wxps.send_message(message=test, markdown=False)
     hookps.send_message(message=test, markdown=False)
 ```
+
+即可发送成功，此时可在微信中看到相应信息。
 
 ## 注意事项
 

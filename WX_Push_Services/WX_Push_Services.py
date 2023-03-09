@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: UTF-8 -*-
+
 import os
 import json
 import requests
@@ -186,7 +189,7 @@ def generate_config() -> None:
     Generate config file......
     """
     try:
-        size = os.path.getsize("./configtest.ini")
+        size = os.path.getsize("./config.ini")
         if size == 0:
             raise FileNotFoundError
     except FileNotFoundError:
@@ -199,7 +202,7 @@ def generate_config() -> None:
             "key": "your key # Enter the webhook key of the enterprise's wechat group chat robot here",
         }
 
-        with open("./configtest.ini", "w") as f:
+        with open("./config.ini", "w") as f:
             config.write(f)
             print("Configuration file generated successfully!")
     else:
@@ -216,12 +219,12 @@ def demo():
         "# %s\n" % "Message display test"
         + "## •  TestMode: Markdown \n"
         + "## •  Type: %s \n" % "Message Push"
-        + "## •  TestResult:%s \n" % "Pass"
+        + "## •  TestResult: %s \n" % "Pass"
     )
     wxps.send_message(message=test, markdown=False)
     # hookps.send_message(message=test, markdown=False)
 
 
 if __name__ == "__main__":
-
+    # generate_config()
     demo()
