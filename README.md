@@ -73,17 +73,18 @@ app_secret = your app_secret # Enter your application secret of enterprise wecha
 # 使用WEB_HOOK_PUSH方式仅需填写下述消息
 key = your key # Enter the webhook key of the enterprise's wechat group chat robot here
 
-
 ```
 
 依次按照`# .......`中的提示填写必要信息。
 
-### 3. 运行示例`demo`
+### 3. 运行示例 `demo`
 在`main.py`中再次运行示例`demo`
 ```python
+    config = PushConfig()       # 默认初始化读取环境变量
+    config.update_from_ini()    # 此时会全部替换参数   
     # wxps = APP_PUSH()
-    hookps = WEB_HOOK_PUSH()
-    
+    hookps = WEB_HOOK_PUSH(config.key)    # 使用此配置初始化
+
     test = (
         "# 企业微信消息测试"
         + "## •  二级标题"

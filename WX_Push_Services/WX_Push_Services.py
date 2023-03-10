@@ -51,12 +51,13 @@ class PushConfig(object):
         '''
         return all([self.corp_id, self.app_secret, self.app_id, self.key])
 
-    def update_from_ini(self, path: Optional[str]):
+    def update_from_ini(self, path: Optional[str] = None):
         '''
         从 ini 配置文件更新
         :param path: ini 配置文件位置
         '''
-        pass
+        path = path or self.DEFAULT_INI_PATH
+        self = read_ini_config(path)
 
     @classmethod
     def init_ini_config_file(cls, path: Optional[str] = None):
@@ -147,11 +148,11 @@ class APP_PUSH(object):
             print("Message Sent Successfully!")
 
 
-def get_config(path: str) -> PushConfig:
+def read_ini_config(path: str) -> PushConfig:
     """_summary_
         Read loacl config file
     Returns:
-        _type_: tuple
+        _type_: PushConfig
 
     """
     try:
@@ -215,26 +216,10 @@ class WEB_HOOK_PUSH:
         else:
             print("Message Sent Successfully!")
 
-    # @staticmethod
-    # def get_config() -> str:
-    #     """_summary_
-
-    #     Returns:
-    #         str: hook key
-    #     """
-    #     try:
-    #         config = configparser.ConfigParser()
-    #         config.read("./config.ini")
-    #         web_hook_bot_key = config["Config"]["key"]
-
-    #         return web_hook_bot_key
-    #     except Exception as e:
-    #         generate_config()
-
 
 def generate_config(path: str) -> None:
     """_summary_
-    Generate config file......
+    Generate config file with default content
     """
     try:
         size = os.path.getsize(path)
@@ -258,8 +243,14 @@ def generate_config(path: str) -> None:
 
 
 def demo():
-    wxps = APP_PUSH()
+    # read from os env
+    # wxps = APP_PUSH()
     # hookps = WEB_HOOK_PUSH()
+
+    # read from ini
+    config = PushConfig()       # 默认初始化读取环境变量
+    config.update_from_ini()    # 此时会全部替换参数
+    wxps = APP_PUSH(config)     # 使用此配置初始化
 
     test = (
         "# %s\n" % "Message display test"
