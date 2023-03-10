@@ -6,28 +6,77 @@ import json
 import requests
 import configparser
 from retry import retry
+from typing import Optional
+
+
+class Error(Exception):
+    pass
+
+
+class ConfigError(Error):
+    '''配置相关错误'''
+    pass
+
+
+class PushConfig(object):
+    '''
+    配置
+    '''
+    DEFAULT_INI_PATH = "config.ini"
+
+    def __init__(
+        self,
+        corp_id: Optional[str] = None,
+        app_secret: Optional[str] = None,
+        app_id: Optional[str] = None,
+        key: Optional[str] = None
+    ) -> None:
+        '''
+        使用环境变量初始化
+        注意：未进行检查，但是你可以手动调用 self.check()
+        '''
+        self.corp_id: str = corp_id or os.environ.get('CORP_ID', '')
+        self.app_secret: str = app_secret or os.environ.get('APP_SECRET', '')
+        self.app_id: str = app_id or os.environ.get('APP_ID', '')
+        self.key: str = key or os.environ.get('WEB_HOOK_BOT', '')
+
+    # 重写 bool(self) 方法
+    def __bool__(self):
+        return self.check()
+    __nozero__ = __bool__
+
+    def check(self) -> bool:
+        '''
+        检查必要配置是否完善
+        '''
+        return all([self.corp_id, self.app_secret, self.app_id, self.key])
+
+    def update_from_ini(self, path: Optional[str]):
+        '''
+        从 ini 配置文件更新
+        :param path: ini 配置文件位置
+        '''
+        pass
+
+    @classmethod
+    def init_ini_config_file(cls, path: Optional[str] = None):
+        '''
+        初始化默认配置文件
+        '''
+        path = path or cls.DEFAULT_INI_PATH
+        generate_config(path)
 
 
 class APP_PUSH(object):
-    def __init__(self) -> None:
+    def __init__(self, config: Optional[PushConfig] = None) -> None:
         """_summary_
         generate a instance of APP_PUSH,init config
         """
+        config = config or PushConfig()
         self.touser = "@all"
-        try:
-            # Read environment variables
-            self.__corp_id = os.environ["CORP_ID"]
-            self.__app_secret = os.environ["APP_SECRET"]
-            self.__app_id = os.environ["APP_ID"]
-
-        except KeyError:
-            # Read local configuration file
-            print(
-                "Configuration file is not detected, generating configuration file......"
-            )
-            config = self.get_config()
-
-            self.__app_id, self.__app_secret, self.__corp_id = config
+        self.__config = config
+        if not config.check():
+            raise ConfigError("配置不完整")
 
     @retry(tries=3, delay=1)
     def _get_token(self) -> str:
@@ -41,14 +90,13 @@ class APP_PUSH(object):
         """
         url = r"https://qyapi.weixin.qq.com/cgi-bin/gettoken"
         params = {
-            "corpid": self.__corp_id,
-            "corpsecret": self.__app_secret,
+            "corpid": self.__config.corp_id,
+            "corpsecret": self.__config.app_secret,
         }
         response = requests.post(url, json=params)
         data = json.loads(response.text)
 
         if data["errmsg"] != "ok":
-
             raise Exception("Get token Failed!")
         else:
             data = json.loads(response.text)
@@ -76,7 +124,7 @@ class APP_PUSH(object):
             send_values = {
                 "touser": self.touser,
                 "msgtype": "markdown",
-                "agentid": self.__app_id,
+                "agentid": self.__config.app_id,
                 "markdown": {"content": message},
                 "safe": "0",
             }
@@ -84,7 +132,7 @@ class APP_PUSH(object):
             send_values = {
                 "touser": self.touser,
                 "msgtype": "text",
-                "agentid": self.__app_id,
+                "agentid": self.__config.app_id,
                 "text": {"content": message},
                 "safe": "0",
             }
@@ -98,39 +146,39 @@ class APP_PUSH(object):
         else:
             print("Message Sent Successfully!")
 
-    @staticmethod
-    def get_config() -> tuple:
-        """_summary_
-            Read loacl config file
-        Returns:
-            _type_: tuple
 
-        """
-        try:
-            config = configparser.ConfigParser()
-            config.read("config.ini")
-            corp_id = config["Config"]["corp_id"]
-            app_id = config["Config"]["app_id"]
-            app_secret = config["Config"]["app_secret"]
-            return app_id, app_secret, corp_id
-        except Exception:
-            generate_config()
+def get_config(path: str) -> PushConfig:
+    """_summary_
+        Read loacl config file
+    Returns:
+        _type_: tuple
+
+    """
+    try:
+        config = configparser.ConfigParser()
+        config.read(path)
+        corp_id = config["Config"]["corp_id"]
+        app_id = config["Config"]["app_id"]
+        app_secret = config["Config"]["app_secret"]
+        web_hook_bot_key = config["Config"]["key"]
+        return PushConfig(corp_id, app_secret, app_id, web_hook_bot_key)
+    except Exception:
+        generate_config(path)
+        raise ConfigError(
+            f"The configuration file {path} already exists. Please check whether the configuration file is correct.")
 
 
 class WEB_HOOK_PUSH:
-    def __init__(self) -> None:
+    def __init__(self, key: Optional[str]) -> None:
         """_summary_
         init config
         """
         self.header = {"Content-Type": "application/json;charset=UTF-8"}
         self.url = "https://qyapi.weixin.qq.com/cgi-bin/webhook/send"
-        try:
-            self.key = os.environ["WEB_HOOK_BOT"]
-        except KeyError:
-            print(
-                "No environment variables detected. Trying to use the local configuration file......"
-            )
-            self.key = self.get_config()
+
+        self.key = key or os.environ.get('WEB_HOOK_BOT', '')
+        if not self.key:
+            raise ConfigError('未设置 WEB_HOOK_BOT')
 
     @retry(tries=3, delay=1)
     def send_message(self, message, markdown=False) -> None:
@@ -167,29 +215,29 @@ class WEB_HOOK_PUSH:
         else:
             print("Message Sent Successfully!")
 
-    @staticmethod
-    def get_config() -> str:
-        """_summary_
+    # @staticmethod
+    # def get_config() -> str:
+    #     """_summary_
 
-        Returns:
-            str: hook key
-        """
-        try:
-            config = configparser.ConfigParser()
-            config.read("./config.ini")
-            web_hook_bot_key = config["Config"]["key"]
+    #     Returns:
+    #         str: hook key
+    #     """
+    #     try:
+    #         config = configparser.ConfigParser()
+    #         config.read("./config.ini")
+    #         web_hook_bot_key = config["Config"]["key"]
 
-            return web_hook_bot_key
-        except Exception as e:
-            generate_config()
+    #         return web_hook_bot_key
+    #     except Exception as e:
+    #         generate_config()
 
 
-def generate_config() -> None:
+def generate_config(path: str) -> None:
     """_summary_
     Generate config file......
     """
     try:
-        size = os.path.getsize("./config.ini")
+        size = os.path.getsize(path)
         if size == 0:
             raise FileNotFoundError
     except FileNotFoundError:
@@ -202,13 +250,11 @@ def generate_config() -> None:
             "key": "your key # Enter the webhook key of the enterprise's wechat group chat robot here",
         }
 
-        with open("./config.ini", "w") as f:
+        with open(path, "w") as f:
             config.write(f)
-            print("Configuration file generated successfully!")
+            # print("Configuration file generated successfully!")
     else:
-        print(
-            "The configuration file already exists. Please check whether the configuration file is correct."
-        )
+        pass
 
 
 def demo():
