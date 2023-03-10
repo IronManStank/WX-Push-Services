@@ -26,7 +26,7 @@ class APP_PUSH(object):
                 "Configuration file is not detected, generating configuration file......"
             )
             config = self.get_config()
-            
+
             self.__app_id, self.__app_secret, self.__corp_id = config
 
     @retry(tries=3, delay=1)
