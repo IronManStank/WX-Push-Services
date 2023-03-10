@@ -1,4 +1,4 @@
-from distutils.core import setup,Extension
+from distutils.core import setup, Extension
 import setuptools
 
 setup(name='WX_Push_Services',
@@ -11,8 +11,7 @@ setup(name='WX_Push_Services',
       license='Apache License',
       description='Push message to wechat',
       long_description='README.md',
-      install_requires=['requests==2.28.2','retry==0.9.2'],
+      install_requires=['requests==2.28.2', 'retry==0.9.2'],
       platforms='any',
       longs_description_content_type='text/markdown',
-      keywords=['wechat','push','message','qywx','wxpusher'])
-      
+      keywords=['wechat', 'push', 'message', 'qywx', 'wxpusher'])
