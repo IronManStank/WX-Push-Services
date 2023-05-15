@@ -2,7 +2,6 @@ from distutils.core import setup, Extension
 import setuptools
 import os
 
-<<<<<<< HEAD
 try:
     import pypandoc
     import pandoc
@@ -13,7 +12,7 @@ try:
     print(long_description)
 except Exception as e:
     print(e)
-    long_description = ""
+    long_description = open(file="README.rst", mode="r", encoding="utf-8").read()
 
 from os import path
 
@@ -21,7 +20,7 @@ this_directory = path.abspath(path.dirname(__file__))
 
 setup(
     name="WX_Push_Services",
-    version="1.0.5",
+    version="1.0.9",
     author="Super.S",
     author_email="1157723200@qq.com",
     packages=["WX_Push_Services"],
@@ -56,24 +55,3 @@ setup(
 )
 
 
-# Add package path to PYTHONPATH environment variable
-if "PYTHONPATH" in os.environ:
-    os.environ["PYTHONPATH"] += ":/WX_Push_Services/WX_Push_Services.py"
-else:
-    os.environ["PYTHONPATH"] = "/WX_Push_Services/WX_Push_Services.py"
-=======
-setup(name='WX_Push_Services',
-      version='1.0.0',
-      author='Super.S',
-      author_email='1157723200@qq.com',
-      packages=['WX_Push_Services'],
-      scripts=['WX_Push_Services/WX_Push_Services.py'],
-      url='https://github.com/IronManStank/QYWX_PushService',
-      license='Apache License',
-      description='Push message to wechat',
-      long_description='README.md',
-      install_requires=['requests==2.28.2', 'retry==0.9.2'],
-      platforms='any',
-      longs_description_content_type='text/markdown',
-      keywords=['wechat', 'push', 'message', 'qywx', 'wxpusher'])
->>>>>>> 46b6b1af0161de3a88764aa2bc31d29ff2002717

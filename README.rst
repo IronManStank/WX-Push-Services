@@ -1,38 +1,43 @@
 
-.. image:: https://img.shields.io/pypi/pyversions/WX-Push-Services?style=plastic
+.. figure:: https://img.shields.io/pypi/pyversions/WX-Push-Services?style=plastic
    :alt: PyPI - Python Version
 
-.. image:: https://img.shields.io/pypi/dm/WX-Push-Services
+.. figure:: https://img.shields.io/pypi/dm/WX-Push-Services
    :alt: PyPI - Downloads
 
-.. image:: https://img.shields.io/pypi/status/WX-Push-Services
+.. figure:: https://img.shields.io/pypi/status/WX-Push-Services
    :alt: PyPI - Status
 
-.. image:: https://img.shields.io/pypi/l/WX-Push-Services
+.. figure:: https://img.shields.io/pypi/l/WX-Push-Services
    :alt: PyPI - License
    
-.. image:: https://img.shields.io/github/issues-search?query=WX-Push-Services
+.. figure:: https://img.shields.io/github/issues-search?query=WX-Push-Services
    :alt: GitHub issue custom search
+
+
 
 重大更新
 ==========
+
+
 目前仓库已在PYPI上发布，可以直接使用pip安装
 
-```shell
-pip install wx-push-services
-```
+``pip install wx-push-services``
+
+
 
 从现在开始，您可以直接使用命令行推送本地文件内容，具体操作如下：
-在推送消息之前，请于环境变量中添加所需变量如后文所示。在命令行环境下，我们也可以直接使用`wx-push-services -cf` 来指定配置文件。如果您不知道如何生成配置文件，请直接执行`wx-push-services` 程序会在当前目录下自动生成。请按照后文填写必要参数，后续可直接运行。
+在推送消息之前，请于环境变量中添加所需变量如后文所示。在命令行环境下，我们也可以直接使用 ``wx-push-services -cf`` 来指定配置文件。如果您不知道如何生成配置文件，请直接执行 ``wx-push-services`` 程序会在当前目录下自动生成。请按照后文填写必要参数，后续可直接运行。
 
-使用 `wx-push-services -h` 查看帮助
+使用 ``wx-push-services -h`` 查看帮助
 
- ```shell
-  wx-push-services -m <"messgage text"> -df <disable message_file mode> -mf <message_file_path> -cf <config_file_path>
-  # 示例：
-  wx-push-services -mf message.log
-  wx-push-services -m '"消息测试"'
-  ```
+.. code-block:: python3
+
+   wx-push-services -m <"messgage text"> -df <disable message_file mode> -mf <message_file_path> -cf <config_file_path>
+   # 示例：
+   wx-push-services -mf message.log
+   wx-push-services -m '"消息测试"'
+
 
 如果您在集成或使用该项目的过程中有任何问题,欢迎提出,我会尽力解答您的疑问。也可以在该项目的GitHub Repo提出Issue获取帮助。
 

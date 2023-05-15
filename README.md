@@ -21,9 +21,9 @@ pip install wx-push-services
 使用 `wx-push-services -h` 查看帮助
 
   ```shell
-  wx-push-services -f <file_path> -t <title> -m <message> -c <markdown>
+  wx-push-services -m <"messgage text"> -df <disable message_file mode> -mf <message_file_path> -cf <config_file_path>
   # 示例：
-  wx-push-services -f README.md
+  wx-push-services -mf message.log
   wx-push-services -m '"消息测试"'
   ```
 

@@ -6,4 +6,7 @@ Version 1.0.5:
 2. Added command line run, now you can send the contents of the specified file directly from the command line. 
 3. Add traceback. 
 4. Improve code stability
+Version 1.0.6: Bug Fix.
+Version 1.0.7: Bug Fix.
+Version 1.0.9: Bug Fix.
 
