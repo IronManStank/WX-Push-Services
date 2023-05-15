@@ -36,7 +36,7 @@
    wx-push-services -m <"messgage text"> -df <disable message_file mode> -mf <message_file_path> -cf <config_file_path>
    # 示例：
    wx-push-services -mf message.log
-   wx-push-services -m '"消息测试"'
+   wx-push-services -df -m '"消息测试"'
 
 
 如果您在集成或使用该项目的过程中有任何问题,欢迎提出,我会尽力解答您的疑问。也可以在该项目的GitHub Repo提出Issue获取帮助。

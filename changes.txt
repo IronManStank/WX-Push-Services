@@ -9,4 +9,5 @@ Version 1.0.5:
 Version 1.0.6: Bug Fix.
 Version 1.0.7: Bug Fix.
 Version 1.0.9: Bug Fix.
+Version 1.0.10: Bug Fix.
 

@@ -297,8 +297,6 @@ def Send_File_Mesage(file_path) -> None:
 
 def Send_Message() -> None:
     message = cl_argparse().message_str
-    c = cl_argparse().message_from_file
-    print(c)
     markdown_signal = cl_argparse().markdown_signal
     try:
         if cl_argparse().message_from_file:

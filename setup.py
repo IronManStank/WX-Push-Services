@@ -20,7 +20,7 @@ this_directory = path.abspath(path.dirname(__file__))
 
 setup(
     name="WX_Push_Services",
-    version="1.0.9",
+    version="1.0.10",
     author="Super.S",
     author_email="1157723200@qq.com",
     packages=["WX_Push_Services"],
