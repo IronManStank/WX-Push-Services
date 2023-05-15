@@ -2,8 +2,8 @@
 ![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)
 ![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
 ![PyPi](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
-![Fork](https://img.shields.io/github/forks/{username}/{repo-name}.svg)
-![Star](https://img.shields.io/github/stars/{username}/{repo-name}.svg)
+![Fork](https://img.shields.io/github/forks/IronManStank/WX-Push-Services.svg)
+![Star](https://img.shields.io/github/stars/IronManStank/WX-Push-Services.svg)
 
 # 重大更新
 目前仓库已在PYPI上发布，可以直接使用pip安装
