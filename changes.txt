@@ -1,1 +1,9 @@
 Version 1.0.0, basic function online.
+Version 1.0.3, fix some bugs.
+Version 1.0.4, add command line parsing.
+Version 1.0.5:
+1. Fixed bug that already has config.ini but no configuration file. 
+2. Added command line run, now you can send the contents of the specified file directly from the command line. 
+3. Add traceback. 
+4. Improve code stability
+

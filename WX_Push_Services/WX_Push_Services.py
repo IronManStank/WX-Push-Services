@@ -6,6 +6,8 @@ import json
 import requests
 import configparser
 from retry import retry
+import argparse
+import traceback
 
 
 class APP_PUSH(object):
@@ -23,10 +25,10 @@ class APP_PUSH(object):
         except KeyError:
             # Read local configuration file
             print(
-                "Configuration file is not detected, generating configuration file......"
+                "System environment variables were not detected, reading configuration file......"
             )
-            config = self.get_config()
-            
+            config = self.get_app_config()
+
             self.__app_id, self.__app_secret, self.__corp_id = config
 
     @retry(tries=3, delay=1)
@@ -48,7 +50,6 @@ class APP_PUSH(object):
         data = json.loads(response.text)
 
         if data["errmsg"] != "ok":
-
             raise Exception("Get token Failed!")
         else:
             data = json.loads(response.text)
@@ -99,7 +100,7 @@ class APP_PUSH(object):
             print("Message Sent Successfully!")
 
     @staticmethod
-    def get_config() -> tuple:
+    def get_app_config() -> tuple:
         """_summary_
             Read loacl config file
         Returns:
@@ -108,11 +109,16 @@ class APP_PUSH(object):
         """
         try:
             config = configparser.ConfigParser()
-            config.read("config.ini")
-            corp_id = config["Config"]["corp_id"]
-            app_id = config["Config"]["app_id"]
-            app_secret = config["Config"]["app_secret"]
-            return app_id, app_secret, corp_id
+            config.read(cl_argparse().config_file)
+            corp_id = config["Config"]["CORP_ID"]
+            app_id = config["Config"]["APP_ID"]
+            app_secret = config["Config"]["APP_SECRET"]
+            if app_id and app_secret and corp_id:
+                return app_id, app_secret, corp_id
+            else:
+                raise ValueError(
+                    "APP Configuration file error, please check the configuration file format"
+                )
         except Exception:
             generate_config()
 
@@ -125,12 +131,12 @@ class WEB_HOOK_PUSH:
         self.header = {"Content-Type": "application/json;charset=UTF-8"}
         self.url = "https://qyapi.weixin.qq.com/cgi-bin/webhook/send"
         try:
-            self.key = os.environ["WEB_HOOK_BOT"]
+            self.key = os.environ["WEB_HOOK_BOT_KEY"]
         except KeyError:
             print(
                 "No environment variables detected. Trying to use the local configuration file......"
             )
-            self.key = self.get_config()
+            self.key = self.get_web_hook_config()
 
     @retry(tries=3, delay=1)
     def send_message(self, message, markdown=False) -> None:
@@ -168,7 +174,7 @@ class WEB_HOOK_PUSH:
             print("Message Sent Successfully!")
 
     @staticmethod
-    def get_config() -> str:
+    def get_web_hook_config() -> str:
         """_summary_
 
         Returns:
@@ -176,10 +182,14 @@ class WEB_HOOK_PUSH:
         """
         try:
             config = configparser.ConfigParser()
-            config.read("./config.ini")
-            web_hook_bot_key = config["Config"]["key"]
-
-            return web_hook_bot_key
+            config.read(cl_argparse().config_file)
+            web_hook_bot_key = config["Config"]["WEB_HOOK_BOT_KEY"]
+            if web_hook_bot_key:
+                return web_hook_bot_key
+            else:
+                raise ValueError(
+                    "WEB_HOOK_BOT_KEY Configuration file error, please check the configuration file!"
+                )
         except Exception as e:
             generate_config()
 
@@ -196,10 +206,10 @@ def generate_config() -> None:
         print("Configuration file is not detected, generating configuration file......")
         config = configparser.ConfigParser()
         config["Config"] = {
-            "corp_id": "your corp_id # Enter your enterprise ID of wechat background here.",
-            "app_id": "your app_id # Enter your application ID of enterprise wechat background here",
-            "app_secret": "your app_secret # Enter your application secret of enterprise wechat background here",
-            "key": "your key # Enter the webhook key of the enterprise's wechat group chat robot here",
+            "CORP_ID": "your corp_id # Enter your enterprise ID of wechat background here.",
+            "APP_ID": "your app_id # Enter your application ID of enterprise wechat background here",
+            "APP_SECRET": "your app_secret # Enter your application secret of enterprise wechat background here",
+            "WEB_HOOK_BOT_KEY": "your key # Enter the webhook key of the enterprise's wechat group chat robot here",
         }
 
         with open("./config.ini", "w") as f:
@@ -211,20 +221,118 @@ def generate_config() -> None:
         )
 
 
-def demo():
+def Send_Message_App(message="test", markdown=False) -> None:
     wxps = APP_PUSH()
-    # hookps = WEB_HOOK_PUSH()
+    wxps.send_message(message, markdown)
 
+
+def Send_Message_Webhook(message="test", markdown=False) -> None:
+    wxps = WEB_HOOK_PUSH()
+    wxps.send_message(message, markdown)
+
+
+def cl_argparse() -> argparse.Namespace:
+    parse = argparse.ArgumentParser(description="Weixin Message Push Service Help")
+    parse.add_argument(
+        "-cf",
+        "--config_file",
+        help="Config file path. The default path is './config.ini'",
+        default="./config.ini",
+    )
+    parse.add_argument(
+        "-mf",
+        "--message_file",
+        help="Input your message file path here. The default path is './output.log'. The program will auto resolve information from your file to string.",
+        default="./output.log",
+    )
+    parse.add_argument(
+        "-f",
+        "--message_from_file",
+        help="Determain the message source, string or file. If you using this option,the -mf param is needed!",
+        type=bool,
+        default=True,
+    )
+    parse.add_argument(
+        "-m",
+        "--message_str",
+        help="Send your message. If you wanna use a file as message source, please use -mf params!",
+        type=str,
+        default="Change your message via -m or -mf params!",
+    )
+    parse.add_argument(
+        "-a",
+        "--app_method",
+        help="Push message through app method via command line. Using app push method as default. If you want to change message push method, you should specific -w params.",
+        type=bool,
+        default=True,
+    )
+    parse.add_argument(
+        "-w",
+        "--web_hook_method",
+        help="Swith message push method as web_hook_push method.",
+        type=bool,
+        default=False,
+    )
+    parse.add_argument(
+        "-mds",
+        "--markdown_signal",
+        help="Swith message the message type to mardown.",
+        type=bool,
+        default=False,
+    )
+    return parse.parse_args()
+
+
+def Send_File_Mesage(file_path) -> None:
+    markdown_signal = cl_argparse().markdown_signal
+
+    with open(file_path, "r") as f:
+        message = f.read()
+
+        if cl_argparse().web_hook_method:
+            Send_Message_Webhook(message, markdown_signal)
+        else:
+            Send_Message_App(message, markdown_signal)
+
+
+def Send_Message() -> None:
+    message = cl_argparse().message_str
+    markdown_signal = cl_argparse().markdown_signal
+    try:
+        if cl_argparse().message_from_file:
+            Send_File_Mesage(cl_argparse().message_file)
+        else:
+            if cl_argparse().web_hook_method:
+                Send_Message_Webhook(message, markdown_signal)
+            else:
+                Send_Message_App(message, markdown_signal)
+
+    except Exception as e:
+        traceback.print_exc()
+
+
+def demo():
+    # You can integrade the code into your own project as follow:
     test = (
         "# %s\n" % "Message display test"
         + "## •  TestMode: Markdown \n"
         + "## •  Type: %s \n" % "Message Push"
         + "## •  TestResult: %s \n" % "Pass"
     )
-    wxps.send_message(message=test, markdown=False)
-    # hookps.send_message(message=test, markdown=False)
-
-
+    # You also can use the demo below to test the message push function.
+    # test = (
+    #     "# %s\n" % "Message display test"
+    #     + "## •  TestMode: Markdown \n"
+    #     + "## •  Type: %s \n" % "Message Push"
+    #     + "## •  TestResult: %s \n" % "Pass"
+    # )
+    # Send_Message(test)
+    push = APP_PUSH()
+    push.send_message(test, markdown=True)
+    
+    # From now on (Version 1.0.5), you can use the command line to send the contents of the file to your Wechat. The specific operations are as follows:
+    
 if __name__ == "__main__":
-    # generate_config()
-    demo()
+    Send_Message()
+
+    # demo()
