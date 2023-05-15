@@ -1,3 +1,17 @@
+
+.. image:: https://img.shields.io/pypi/pyversions/WX-Push-Services?style=plastic
+   :alt: PyPI - Python Version
+
+.. image:: https://img.shields.io/pypi/dm/WX-Push-Services
+   :alt: PyPI - Downloads
+
+.. image:: https://img.shields.io/pypi/status/WX-Push-Services
+   :alt: PyPI - Status
+
+.. image:: https://img.shields.io/pypi/l/WX-Push-Services
+   :alt: PyPI - License
+
+
 重大更新
 =======
 目前仓库已在PYPI上发布，可以直接使用pip安装
