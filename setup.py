@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# -*- coding: UTF-8 -*-
 from distutils.core import setup, Extension
 import setuptools
 import os
@@ -20,10 +22,11 @@ this_directory = path.abspath(path.dirname(__file__))
 
 setup(
     name="WX_Push_Services",
-    version="1.0.10",
+    version="1.0.19",
     author="Super.S",
     author_email="1157723200@qq.com",
     packages=["WX_Push_Services"],
+    py_modules=["WX_Push_Services"],
     scripts=["WX_Push_Services/WX_Push_Services.py"],
     url="https://github.com/IronManStank/QYWX_PushService",
     license="MIT License",
@@ -33,7 +36,7 @@ setup(
     install_requires=["requests==2.28.2", "retry==0.9.2"],
     platforms="any",
     keywords=["wechat", "push", "message", "qywx", "wxpusher"],
-    entry_points={"console_scripts": ["wx-push-services=wx_push_services.cli:main"]},
+    entry_points={"console_scripts": ["wx-push-services=WX_Push_Services:Send_Message"]},
     classifiers=[
         "Development Status :: 4 - Beta",
         "Operating System :: OS Independent",

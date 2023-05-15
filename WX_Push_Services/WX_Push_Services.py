@@ -200,7 +200,7 @@ def generate_config() -> None:
     Generate config file with default content
     """
     try:
-        size = os.path.getsize(path)
+        size = os.path.getsize(cl_argparse().config_file)
         if size == 0:
             raise FileNotFoundError
     except FileNotFoundError:
@@ -250,7 +250,6 @@ def cl_argparse() -> argparse.Namespace:
         "--message_from_file",
         help="Determain the message source, string or file. If you using this option,the -mf param is needed!",
         action="store_false",
-
     )
     parse.add_argument(
         "-m",
@@ -260,39 +259,35 @@ def cl_argparse() -> argparse.Namespace:
         default="Change your message via -m or -mf params!",
     )
     parse.add_argument(
-        "-a",
-        "--app_method",
-        help="Push message through app method via command line. Using app push method as default. If you want to change message push method, you should specific -w params.",
-        type=bool,
-        default=True,
-    )
-    parse.add_argument(
         "-w",
         "--web_hook_method",
-        help="Swith message push method as web_hook_push method.",
-        type=bool,
-        default=False,
+        help="Push message through app method via command line. Using app push method as default. If you want to change message push method, you should specific -a params.",
+        action="store_true",
     )
+
     parse.add_argument(
         "-mds",
         "--markdown_signal",
         help="Swith message the message type to mardown.",
-        type=bool,
-        default=False,
+        action="store_true",
     )
     return parse.parse_args()
 
 
 def Send_File_Mesage(file_path) -> None:
     markdown_signal = cl_argparse().markdown_signal
+    try:
+        with open(file_path, "r") as f:
+            message = f.read()
 
-    with open(file_path, "r") as f:
-        message = f.read()
-
-        if cl_argparse().web_hook_method:
-            Send_Message_Webhook(message, markdown_signal)
-        else:
-            Send_Message_App(message, markdown_signal)
+            if cl_argparse().web_hook_method:
+                Send_Message_Webhook(message, markdown_signal)
+            else:
+                Send_Message_App(message, markdown_signal)
+    except FileNotFoundError as e:
+        print(
+            "Please specify the file to be sent. The default file is not detected: . /output.log"
+        )
 
 
 def Send_Message() -> None:
