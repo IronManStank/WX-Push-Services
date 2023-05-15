@@ -10,10 +10,12 @@
 
 .. image:: https://img.shields.io/pypi/l/WX-Push-Services
    :alt: PyPI - License
-
+   
+.. image:: https://img.shields.io/github/issues-search?query=WX-Push-Services
+   :alt: GitHub issue custom search
 
 重大更新
-=======
+==========
 目前仓库已在PYPI上发布，可以直接使用pip安装
 
 ```shell
