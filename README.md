@@ -40,7 +40,6 @@ pip install wx-push-services
     - [2. 安装python运行库](#2-安装python运行库)
     - [3. 生成并填写配置文件](#3-生成并填写配置文件)
     - [4. 运行示例`demo`](#4-运行示例demo)
-    - [3. 运行示例 `demo`](#3-运行示例-demo)
   - [注意事项](#注意事项)
 
 ## 主要用途
@@ -104,12 +103,8 @@ key = your key # Enter the webhook key of the enterprise's wechat group chat rob
 
 依次按照`# .......`中的提示填写必要信息。
 
-<<<<<<< HEAD
 ### 4. 运行示例`demo`
 
-=======
-### 3. 运行示例 `demo`
->>>>>>> 46b6b1af0161de3a88764aa2bc31d29ff2002717
 在`main.py`中再次运行示例`demo`
 
 ```python
