@@ -204,7 +204,7 @@ def generate_config() -> None:
         if size == 0:
             raise FileNotFoundError
     except FileNotFoundError:
-        print("Configuration file is not detected, generating configuration file......")
+        print("Configuration file was not detected, generating configuration file......")
         config = configparser.ConfigParser()
         config["Config"] = {
             "CORP_ID": "your corp_id # Enter your enterprise ID of wechat background here.",
@@ -278,15 +278,15 @@ def cl_argparse() -> argparse.Namespace:
     if (parse.parse_args().message_from_file == False) and (
         parse.parse_args().message_str == "Change your message via -m or -mf params!"
     ):
-        raise ("The -m and -df must be used together! Please check your input!")
+        raise Exception("The -m and -df option must be used together! Please check your input!")
 
     else:
         pass
-    if (
+    if (  
         parse.parse_args().message_str != "Change your message via -m or -mf params!"
     ) and (parse.parse_args().message_file == "./output.log"):
-        raise ("The -m and -df must be used together! Please check your input!")
-    else:
+        raise Exception("The -m and -df option must be used together! Please check your input!")
+    else:   
         pass
     return parse.parse_args()
 
@@ -303,7 +303,7 @@ def Send_File_Mesage(file_path) -> None:
                 Send_Message_App(message, markdown_signal)
     except FileNotFoundError as e:
         print(
-            "Please specify the file to be sent. The default file is not detected: . /output.log"
+            "Please specific the message file to be sent. The default file was not detected: . /output.log"
         )
 
 
