@@ -213,7 +213,7 @@ def generate_config() -> None:
             "WEB_HOOK_BOT_KEY": "your key # Enter the webhook key of the enterprise's wechat group chat robot here",
         }
 
-        with open(path, "w") as f:
+        with open(cl_argparse().config_file, "w") as f:
             config.write(f)
             # print("Configuration file generated successfully!")
     else:
@@ -238,26 +238,7 @@ def cl_argparse() -> argparse.Namespace:
         help="Config file path. The default path is './config.ini'",
         default="./config.ini",
     )
-    parse.add_argument(
-        "-mf",
-        "--message_file",
-        help="Input your message file path here. The default path is './output.log'. The program will auto resolve information from your file to string.",
-        default="./output.log",
-    )
 
-    parse.add_argument(
-        "-df",
-        "--message_from_file",
-        help="Determain the message source, string or file. If you using this option,the -mf param is needed!",
-        action="store_false",
-    )
-    parse.add_argument(
-        "-m",
-        "--message_str",
-        help="Send your message. If you wanna use a file as message source, please use -mf params!",
-        type=str,
-        default="Change your message via -m or -mf params!",
-    )
     parse.add_argument(
         "-w",
         "--web_hook_method",
@@ -271,6 +252,42 @@ def cl_argparse() -> argparse.Namespace:
         help="Swith message the message type to mardown.",
         action="store_true",
     )
+    parse.add_argument(
+        "-df",
+        "--message_from_file",
+        help="Determain the message source, string or file. If you using this option,the -mf param is needed!",
+        action="store_false",
+        # required=True,
+    )
+    group = parse.add_mutually_exclusive_group()
+    group.add_argument(
+        "-m",
+        "--message_str",
+        help="Send your message. If you wanna use a file as message source, please use -mf params!",
+        type=str,
+        default="Change your message via -m or -mf params!",
+        # required=True,
+    )
+    group.add_argument(
+        "-mf",
+        "--message_file",
+        help="Input your message file path here. The default path is './output.log'. The program will auto resolve information from your file to string.",
+        default="./output.log",
+        # exclusive=True,
+    )
+    if (parse.parse_args().message_from_file == False) and (
+        parse.parse_args().message_str == "Change your message via -m or -mf params!"
+    ):
+        raise ("The -m and -df must be used together! Please check your input!")
+
+    else:
+        pass
+    if (
+        parse.parse_args().message_str != "Change your message via -m or -mf params!"
+    ) and (parse.parse_args().message_file == "./output.log"):
+        raise ("The -m and -df must be used together! Please check your input!")
+    else:
+        pass
     return parse.parse_args()
 
 
