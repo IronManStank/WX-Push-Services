@@ -231,7 +231,8 @@ def Send_Message_Webhook(message="test", markdown=False) -> None:
 
 
 def cl_argparse() -> argparse.Namespace:
-    parse = argparse.ArgumentParser(description="Weixin Message Push Service Help")
+    parse = argparse.ArgumentParser(
+        description="Weixin Message Push Service Help")
     parse.add_argument(
         "-cf",
         "--config_file",
@@ -278,21 +279,23 @@ def cl_argparse() -> argparse.Namespace:
     situation1 = (parse.parse_args().message_from_file == False) and (
         parse.parse_args().message_str == "Change your message via -m or -mf params!"
     )
-    situation2 = (notparse.parse_args().message_str != "Change your message via -m or -mf params!")
+    situation2 = (notparse.parse_args().message_str !=
+                  "Change your message via -m or -mf params!")
     if situation1 or situation2:
-        raise Exception("The -m and -df option must be used together! Please check your input!")
+        raise Exception(
+            "The -m and -df option must be used together! Please check your input!")
 
     else:
         pass
-    # situation1 =(  
-    #    
+    # situation1 =(
+    #
     # ) and (parse.parse_args().message_file == "./output.log")
-    # # situation2 = 
+    # # situation2 =
     # if situation1:
     #     pass
-    # else:   
+    # else:
     #     raise Exception("The -m and -df option must be used together! Please check your input!")
-        
+
     return parse.parse_args()
 
 
