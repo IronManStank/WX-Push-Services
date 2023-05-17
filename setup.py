@@ -8,13 +8,15 @@ try:
     import pypandoc
     import pandoc
 
-    long_description = open(file="README.rst", mode="r", encoding="utf-8").read()
+    long_description = open(file="README.rst", mode="r",
+                            encoding="utf-8").read()
     # pypandoc.convert_file('README.md','rst')
     # open(file='README.md',mode='r',encoding='utf-8').read()
     print(long_description)
 except Exception as e:
     print(e)
-    long_description = open(file="README.rst", mode="r", encoding="utf-8").read()
+    long_description = open(file="README.rst", mode="r",
+                            encoding="utf-8").read()
 
 from os import path
 
@@ -36,7 +38,8 @@ setup(
     install_requires=["requests==2.28.2", "retry==0.9.2"],
     platforms="any",
     keywords=["wechat", "push", "message", "qywx", "wxpusher"],
-    entry_points={"console_scripts": ["wx-push-services=WX_Push_Services:Send_Message"]},
+    entry_points={"console_scripts": [
+        "wx-push-services=WX_Push_Services:Send_Message"]},
     classifiers=[
         "Development Status :: 4 - Beta",
         "Operating System :: OS Independent",
@@ -56,5 +59,3 @@ setup(
         "Topic :: Software Development :: Libraries :: Python Modules",
     ],
 )
-
-
