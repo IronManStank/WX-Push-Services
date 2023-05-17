@@ -275,19 +275,24 @@ def cl_argparse() -> argparse.Namespace:
         default="./output.log",
         # exclusive=True,
     )
-    if (parse.parse_args().message_from_file == False) and (
+    situation1 = (parse.parse_args().message_from_file == False) and (
         parse.parse_args().message_str == "Change your message via -m or -mf params!"
-    ):
+    )
+    situation2 = (notparse.parse_args().message_str != "Change your message via -m or -mf params!")
+    if situation1 or situation2:
         raise Exception("The -m and -df option must be used together! Please check your input!")
 
     else:
         pass
-    if (  
-        parse.parse_args().message_str != "Change your message via -m or -mf params!"
-    ) and (parse.parse_args().message_file == "./output.log"):
-        raise Exception("The -m and -df option must be used together! Please check your input!")
-    else:   
-        pass
+    # situation1 =(  
+    #    
+    # ) and (parse.parse_args().message_file == "./output.log")
+    # # situation2 = 
+    # if situation1:
+    #     pass
+    # else:   
+    #     raise Exception("The -m and -df option must be used together! Please check your input!")
+        
     return parse.parse_args()
 
 
